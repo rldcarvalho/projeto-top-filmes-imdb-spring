@@ -9,6 +9,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -21,6 +23,9 @@ class MovieControllerTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Autowired
+    private MovieController movieController;
+
     @Test
     void deveriaRetornarUmJsonComOTop250Filmes() {
 
@@ -29,5 +34,11 @@ class MovieControllerTest {
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
+    }
+    @Test
+    void deveriaRetornarUmJsonChamadoPelaClasse() throws IOException {
+        ListOfMovies json = movieController.getTop250Films();
+
+        assertNotNull(json);
     }
 }
