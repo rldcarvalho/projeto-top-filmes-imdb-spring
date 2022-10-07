@@ -1,5 +1,6 @@
 package br.com.rldcarvalho.dayscode.controller;
 
+import br.com.rldcarvalho.dayscode.model.ListOfMovies;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class FilmControllerTest {
+class MovieControllerTest {
 
     @LocalServerPort
     private int port;
@@ -23,7 +24,7 @@ class FilmControllerTest {
     @Test
     void deveriaRetornarUmJsonComOTop250Filmes() {
 
-        ResponseEntity<String> response = this.testRestTemplate.getForEntity("http://localhost:" + port + "/top250", String.class);
+        ResponseEntity<ListOfMovies> response = this.testRestTemplate.getForEntity("http://localhost:" + port + "/top250", ListOfMovies.class);
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());

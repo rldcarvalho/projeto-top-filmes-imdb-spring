@@ -1,5 +1,6 @@
 package br.com.rldcarvalho.dayscode.controller;
 
+import br.com.rldcarvalho.dayscode.model.ListOfMovies;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-class FilmControllerTest2 {
+class MovieControllerTest2 {
 
     @Autowired
-    private FilmController filmController;
+    private MovieController movieController;
 
     @Test
     void getTop250Films() {
-        String json = filmController.getTop250Films();
+        ListOfMovies json = movieController.getTop250Films();
 
         assertNotNull(json);
     }
