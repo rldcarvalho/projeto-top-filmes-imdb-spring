@@ -42,7 +42,5 @@ public class HTMLGenerator {
         }
         this.writer.println("</main>");
         this.writer.println("</body>");
-
-        System.out.println("Arquivo HTML gerado com sucesso!");
     }
 }

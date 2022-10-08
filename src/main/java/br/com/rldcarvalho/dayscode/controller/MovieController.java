@@ -1,6 +1,7 @@
 package br.com.rldcarvalho.dayscode.controller;
 
 import br.com.rldcarvalho.dayscode.HTMLGenerator;
+import br.com.rldcarvalho.dayscode.client.ImdbApiClient;
 import br.com.rldcarvalho.dayscode.model.ListOfMovies;
 import br.com.rldcarvalho.dayscode.model.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +19,28 @@ import java.util.List;
 @RestController
 public class MovieController {
 
-    @Value("${url.imdb}")
-    private String baseUrl;
-    @Value("${api.key}")
-    private String apiKey;
     @Autowired
-    private RestTemplate restTemplate;
+    private ImdbApiClient imdbApiClient;
 
 
     @GetMapping("/top250")
-    public ListOfMovies getTop250Films() throws IOException {
-        ResponseEntity<ListOfMovies> response
-                = this.restTemplate.getForEntity(baseUrl + apiKey, ListOfMovies.class);
+    public ListOfMovies getTop250Films(){
+
+        ListOfMovies movies = this.imdbApiClient.getBody();
+
+        return movies;
+    }
+
+    @GetMapping("/generatehtml")
+    public void generateHtml() throws IOException {
+        ListOfMovies movies = imdbApiClient.getBody();
 
         PrintWriter ps = new PrintWriter("src/main/resources/content.html", StandardCharsets.UTF_8);
 
-        new HTMLGenerator(ps).generate(response.getBody().getItems());
+        new HTMLGenerator(ps).generate(movies.getItems());
 
         ps.close();
 
-        return response.getBody();
+        System.out.println("Arquivo HTML gerado com sucesso!");
     }
 }
