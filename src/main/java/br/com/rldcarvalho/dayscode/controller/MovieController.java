@@ -8,13 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class MovieController {
@@ -24,16 +28,31 @@ public class MovieController {
 
 
     @GetMapping("/top250")
-    public ListOfMovies getTop250Films(){
+    @ResponseBody
+    public ListOfMovies getTop250Films(@RequestParam(required = false) String title) throws IOException {
 
         ListOfMovies movies = this.imdbApiClient.getBody();
 
+        if(title != null){
+
+            ListOfMovies filteredMovies = new ListOfMovies(new ArrayList<>());
+
+            filteredMovies.getItems().addAll(movies.getItems()
+            .stream()
+            .filter(movie -> movie.getTitle().contains(title))
+            .collect(Collectors.toList()));
+
+            movies = filteredMovies;
+        }
+
+        generateHtml(movies);
+
         return movies;
+
     }
 
-    @GetMapping("/generatehtml")
-    public void generateHtml() throws IOException {
-        ListOfMovies movies = imdbApiClient.getBody();
+
+    public void generateHtml(ListOfMovies movies) throws IOException {
 
         PrintWriter ps = new PrintWriter("src/main/resources/content.html", StandardCharsets.UTF_8);
 
