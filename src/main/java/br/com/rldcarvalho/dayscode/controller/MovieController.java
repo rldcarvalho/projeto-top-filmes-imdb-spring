@@ -5,19 +5,17 @@ import br.com.rldcarvalho.dayscode.client.ImdbApiClient;
 import br.com.rldcarvalho.dayscode.model.ListOfMovies;
 import br.com.rldcarvalho.dayscode.model.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,6 +45,14 @@ public class MovieController {
 
         generateHtml(movies);
 
+        Map<String, Movie> moviesMap = creatMapWithId(movies);
+
+        for (String id: moviesMap.keySet()) {
+            String key = id.toString();
+            String value = moviesMap.get(id).toString();
+            System.out.println(key + " " + value);
+        }
+
         return movies;
 
     }
@@ -61,5 +67,15 @@ public class MovieController {
         ps.close();
 
         System.out.println("Arquivo HTML gerado com sucesso!");
+    }
+    
+    public Map<String, Movie> creatMapWithId(ListOfMovies movies){
+        Map<String, Movie> moviesMap = new HashMap<>();
+        int id = 1;
+        for (Movie movie : movies.getItems()) {
+            moviesMap.put(String.valueOf(id), movie);
+            id++;
+        }
+        return moviesMap;
     }
 }
