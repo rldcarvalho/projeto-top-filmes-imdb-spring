@@ -5,10 +5,7 @@ import br.com.rldcarvalho.dayscode.client.ImdbApiClient;
 import br.com.rldcarvalho.dayscode.model.ListOfMovies;
 import br.com.rldcarvalho.dayscode.model.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,15 +18,19 @@ import java.util.stream.Collectors;
 @RestController
 public class MovieController {
 
+    private ListOfMovies movies = new ListOfMovies(new ArrayList<>());
+    private ListOfMovies favoritos = new ListOfMovies(new ArrayList<>());
+    private Map<String, Movie> moviesMap = new HashMap<>();
+
     @Autowired
     private ImdbApiClient imdbApiClient;
 
 
     @GetMapping("/top250")
     @ResponseBody
-    public ListOfMovies getTop250Films(@RequestParam(required = false) String title) throws IOException {
+    public ListOfMovies getTop250Movies(@RequestParam(required = false) String title) throws IOException {
 
-        ListOfMovies movies = this.imdbApiClient.getBody();
+        movies = this.imdbApiClient.getBody();
 
         if(title != null){
 
@@ -45,7 +46,7 @@ public class MovieController {
 
         generateHtml(movies);
 
-        Map<String, Movie> moviesMap = creatMapWithId(movies);
+        this.moviesMap = creatMapWithId(movies);
 
         for (String id: moviesMap.keySet()) {
             String key = id.toString();
@@ -54,6 +55,22 @@ public class MovieController {
         }
 
         return movies;
+
+    }
+
+    @PostMapping("/favorito/{filmeId}")
+    public String addFavoriteMovie(@PathVariable String filmeId) throws IOException {
+
+        if (this.movies.getItems().isEmpty()) {
+            getTop250Movies(null);
+        }
+
+        if(this.moviesMap.get(filmeId) != null) {
+            this.favoritos.getItems().add(this.moviesMap.get(filmeId));
+            return "Filme inserido com sucesso";
+        }
+
+        return "ID não encontrado na lista de Filmes";
 
     }
 
