@@ -71,9 +71,24 @@ public class MovieController {
         }
 
         return "ID não encontrado na lista de Filmes";
-
     }
 
+    @GetMapping("/favoritos")
+    public ListOfMovies getFavoriteMovies() throws IOException {
+
+        if(!this.favoritos.getItems().isEmpty()){
+            PrintWriter ps = new PrintWriter("src/main/resources/favoritos.html", StandardCharsets.UTF_8);
+
+            new HTMLGenerator(ps).generate(this.favoritos.getItems());
+
+            ps.close();
+
+            System.out.println("Arquivo HTML gerado com sucesso!");
+        }
+
+        return this.favoritos;
+
+    }
 
     public void generateHtml(ListOfMovies movies) throws IOException {
 
