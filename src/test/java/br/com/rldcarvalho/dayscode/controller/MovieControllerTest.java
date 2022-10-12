@@ -42,4 +42,10 @@ class MovieControllerTest {
         assertNotNull(json);
     }
 
+    @Test
+    void deveriaRetornarOFilmeQueContemBatmanNoTitulo(){
+        ResponseEntity<ListOfMovies> response = this.testRestTemplate.getForEntity("http://localhost:" + port + "/top250?title=Batman", ListOfMovies.class);
+
+        assertEquals("Batman Begins", response.getBody().getItems().get(0).getTitle());
+    }
 }
