@@ -37,8 +37,9 @@ class MovieControllerTest {
     }
     @Test
     void deveriaRetornarUmJsonChamadoPelaClasse() throws IOException {
-        ListOfMovies json = movieController.getTop250Movies();
+        ListOfMovies json = movieController.getTop250Movies(null);
 
         assertNotNull(json);
     }
+
 }
