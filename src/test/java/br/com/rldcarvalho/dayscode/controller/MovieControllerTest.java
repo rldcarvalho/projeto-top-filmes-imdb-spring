@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -47,5 +48,14 @@ class MovieControllerTest {
         ResponseEntity<ListOfMovies> response = this.testRestTemplate.getForEntity("http://localhost:" + port + "/top250?title=Batman", ListOfMovies.class);
 
         assertEquals("Batman Begins", response.getBody().getItems().get(0).getTitle());
+    }
+
+    @Test
+    void deveriaInserirOFilmeNaListaDeFavoritos(){
+        HttpEntity<String> request = new HttpEntity<String>("1");
+
+        ResponseEntity<String> response = this.testRestTemplate.postForEntity("http://localhost:" + port + "/favorito/1", request, String.class);
+
+        assertEquals("Filme inserido com sucesso", response.getBody());
     }
 }

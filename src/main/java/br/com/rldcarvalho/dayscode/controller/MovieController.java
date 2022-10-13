@@ -48,11 +48,11 @@ public class MovieController {
 
         this.moviesMap = creatMapWithId(movies);
 
-        for (String id: moviesMap.keySet()) {
-            String key = id.toString();
-            String value = moviesMap.get(id).toString();
-            System.out.println(key + " " + value);
-        }
+//        for (String id: moviesMap.keySet()) {
+//            String key = id.toString();
+//            String value = moviesMap.get(id).toString();
+//            System.out.println(key + " " + value);
+//        }
 
         return movies;
 
