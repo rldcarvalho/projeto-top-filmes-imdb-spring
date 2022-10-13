@@ -58,4 +58,17 @@ class MovieControllerTest {
 
         assertEquals("Filme inserido com sucesso", response.getBody());
     }
+
+    @Test
+    void deveriaGerarUmHtmlComOsFilmesFavoritos(){
+
+        HttpEntity<String> request = new HttpEntity<String>("1");
+
+        ResponseEntity<String> result = this.testRestTemplate.postForEntity("http://localhost:" + port + "/favorito/1", request, String.class);
+
+        ResponseEntity<ListOfMovies> response = this.testRestTemplate.getForEntity("http://localhost:" + port + "/favoritos", ListOfMovies.class);
+
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }
