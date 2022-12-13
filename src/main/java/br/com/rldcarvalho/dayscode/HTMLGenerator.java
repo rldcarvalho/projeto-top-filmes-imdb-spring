@@ -1,8 +1,11 @@
 package br.com.rldcarvalho.dayscode;
 
+import br.com.rldcarvalho.dayscode.model.ListOfMovies;
 import br.com.rldcarvalho.dayscode.model.Movie;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class HTMLGenerator {
@@ -42,5 +45,16 @@ public class HTMLGenerator {
         }
         this.writer.println("</main>");
         this.writer.println("</body>");
+    }
+
+    public static void generate(ListOfMovies movies) throws IOException {
+
+        PrintWriter ps = new PrintWriter("src/main/resources/content.html", StandardCharsets.UTF_8);
+
+        new HTMLGenerator(ps).generate(movies.getItems());
+
+        ps.close();
+
+        System.out.println("Arquivo HTML gerado com sucesso!");
     }
 }

@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 public class MovieController {
@@ -37,16 +36,15 @@ public class MovieController {
             ListOfMovies filteredMovies = new ListOfMovies(new ArrayList<>());
 
             filteredMovies.getItems().addAll(movies.getItems()
-            .stream()
-            .filter(movie -> movie.getTitle().contains(title))
-            .collect(Collectors.toList()));
+                    .stream()
+                    .filter(movie -> movie.getTitle().contains(title)).toList());
 
             movies = filteredMovies;
         }
 
-        generateHtml(movies);
+        HTMLGenerator.generate(movies);
 
-        this.moviesMap = creatMapWithId(movies);
+        this.moviesMap = ListOfMovies.creatMapWithId(movies);
 
         return movies;
 
@@ -84,24 +82,4 @@ public class MovieController {
 
     }
 
-    public void generateHtml(ListOfMovies movies) throws IOException {
-
-        PrintWriter ps = new PrintWriter("src/main/resources/content.html", StandardCharsets.UTF_8);
-
-        new HTMLGenerator(ps).generate(movies.getItems());
-
-        ps.close();
-
-        System.out.println("Arquivo HTML gerado com sucesso!");
-    }
-    
-    public Map<String, Movie> creatMapWithId(ListOfMovies movies){
-        Map<String, Movie> moviesMap = new HashMap<>();
-        int id = 1;
-        for (Movie movie : movies.getItems()) {
-            moviesMap.put(String.valueOf(id), movie);
-            id++;
-        }
-        return moviesMap;
-    }
 }
