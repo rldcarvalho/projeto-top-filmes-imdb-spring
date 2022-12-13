@@ -18,6 +18,7 @@ public class ImdbApiClient {
     private RestTemplate restTemplate;
 
     public ListOfMovies getBody(){
+
         ResponseEntity<ListOfMovies> response
                 = this.restTemplate.getForEntity(baseUrl + apiKey, ListOfMovies.class);
 
